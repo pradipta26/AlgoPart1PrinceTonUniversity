@@ -1,6 +1,5 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Deque<Item> implements Iterable<Item> {
@@ -21,7 +20,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // is the deque empty?
     public boolean isEmpty() {
-        return ( head == null);
+        return (head == null);
     }
 
     // return the number of items on the deque

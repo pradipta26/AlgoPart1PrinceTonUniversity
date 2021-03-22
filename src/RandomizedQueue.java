@@ -1,7 +1,5 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -24,7 +22,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>  {
 
     // is the randomized queue empty?
     public boolean isEmpty() {
-        return ( head == null);
+        return (head == null);
     }
 
     // return the number of items on the randomized queue
@@ -89,12 +87,12 @@ public class RandomizedQueue<Item> implements Iterable<Item>  {
     public Item sample() {
         if (head == null)
             throw new NoSuchElementException("sample method call on empty Queue is not permitted");
-        return getRandomNode(StdRandom.uniform(0, size)).value;
+        return getNode(StdRandom.uniform(0, size)).value;
     }
 
-    private Node getRandomNode(int n) {
+    private Node getNode(int n) {
         Node node = head;
-        for(int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
             node = node.next;
         return node;
     }
@@ -102,7 +100,9 @@ public class RandomizedQueue<Item> implements Iterable<Item>  {
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
         return new Iterator<Item>() {
-            int currentSize = size();
+            int currentSize = size;
+            boolean initialize = true;
+            int[] used = new int[currentSize];
             @Override
             public boolean hasNext() {
                 return currentSize != 0;
@@ -111,9 +111,16 @@ public class RandomizedQueue<Item> implements Iterable<Item>  {
             public Item next() {
                 if (size == 0)
                     throw new NoSuchElementException("No more Item is available!!!");
-                int n = StdRandom.uniform(0, currentSize);
+                int n = -1;
+                while (currentSize > 0) {
+                    n = StdRandom.uniform(0, size);
+                    if (used[n] == 0) {
+                        used[n] = -1;
+                        break;
+                    }
+                }
                 currentSize--;
-                return getRandomNode(n).value;
+                return getNode(n).value;
             }
             @Override
             public void remove()
@@ -129,30 +136,23 @@ public class RandomizedQueue<Item> implements Iterable<Item>  {
             System.out.print(" -> " + node.value);
             node = node.next;
         }
-        System.out.printf("\nSize = %d, isEmpty = %b%n", size(), isEmpty());
+        System.out.printf("\nSize = %d, isEmpty = %b%n", size, isEmpty());
     }
 
     // unit testing (required)
     public static void main(String[] args) {
         RandomizedQueue<Integer> queue = new RandomizedQueue<>();
-        StdOut.printf("size = %d, isEmpty = %b%n", queue.size(), queue.isEmpty());
+        StdOut.printf("size = %d, isEmpty = %b%n", queue.size, queue.isEmpty());
         queue.enqueue(1);
         queue.enqueue(2);
-        /*queue.enqueue(3);
-        queue.enqueue(4);
-        queue.enqueue(5);*/
         for (Integer value : queue) {
             System.out.print(" -> " + value);
         }
-        StdOut.printf("\nsize = %d, isEmpty = %b sample = %d%n", queue.size(), queue.isEmpty(), queue.sample());
+        StdOut.printf("\nsize = %d, isEmpty = %b sample = %d%n", queue.size, queue.isEmpty(), queue.sample());
         queue.dequeue();
-        /*StdOut.println(queue.dequeue());
-        StdOut.println(queue.dequeue());
-        StdOut.println(queue.dequeue());
-        StdOut.println(queue.dequeue());*/
         for (Integer value : queue) {
             System.out.print(" -> " + value);
         }
-        StdOut.printf("\nsize = %d, isEmpty = %b%n", queue.size(), queue.isEmpty());
+        StdOut.printf("\nsize = %d, isEmpty = %b%n", queue.size, queue.isEmpty());
     }
 }
