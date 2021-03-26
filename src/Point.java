@@ -128,7 +128,7 @@ public class Point implements Comparable<Point> {
         }
 
     }
-    private class SlopeCompare extends Comparator<Point> {
+    private class SlopeCompare implements Comparator<Point> {
         private Point point;
         private SlopeCompare(Point point) {
             this.point = point;
@@ -138,6 +138,11 @@ public class Point implements Comparable<Point> {
             if (point.slopeTo(p) > point.slopeTo(q)) return 1;
             if (point.slopeTo(p) < point.slopeTo(q)) return -1;
             return 0;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return point.slopeTo((Point) o) == 0;
         }
     }
 }
