@@ -16,6 +16,8 @@ public class Point implements Comparable<Point> {
      */
     public Point(int x, int y) {
         /* DO NOT MODIFY */
+        if (x < 0 || y < 0 || x > 32767 | y > 32767)
+            throw new IllegalArgumentException("Coordinates must be in between 0 to 32,767");
         this.x = x;
         this.y = y;
     }
@@ -56,7 +58,7 @@ public class Point implements Comparable<Point> {
             return Double.NEGATIVE_INFINITY;
         else if (that.x == this.x)
             return Double.POSITIVE_INFINITY;
-        return (that.y - this.y) / (that.x - this.x);
+        return (double)(that.y - this.y) / (that.x - this.x);
     }
 
     /**
@@ -85,7 +87,7 @@ public class Point implements Comparable<Point> {
      */
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
-        return (Comparator<Point>) new Point(0,0);
+        return new SlopeCompare(this);
     }
 
 
