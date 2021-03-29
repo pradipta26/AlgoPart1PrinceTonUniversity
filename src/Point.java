@@ -7,7 +7,7 @@ public class Point implements Comparable<Point> {
 
     private final int x;     // x-coordinate of this point
     private final int y;     // y-coordinate of this point
-
+    private final int upperNumericLimit = 32767;
     /**
      * Initializes a new point.
      *
@@ -16,7 +16,7 @@ public class Point implements Comparable<Point> {
      */
     public Point(int x, int y) {
         /* DO NOT MODIFY */
-        if (x < 0 || y < 0 || x > 32767 | y > 32767)
+        if (x < 0 || y < 0 || x > upperNumericLimit || y > upperNumericLimit)
             throw new IllegalArgumentException("Coordinates must be in between 0 to 32,767");
         this.x = x;
         this.y = y;
@@ -54,11 +54,13 @@ public class Point implements Comparable<Point> {
      */
     public double slopeTo(Point that) {
         /* YOUR CODE HERE */
-        if (that.y == this.y && that.x == this.x )
+        if (that.y == this.y && that.x == this.x)
             return Double.NEGATIVE_INFINITY;
         else if (that.x == this.x)
             return Double.POSITIVE_INFINITY;
-        return (double)(that.y - this.y) / (that.x - this.x);
+        else if (that.y == this.y)
+            return 0.0;
+        return (double) (that.y - this.y) / (that.x - this.x);
     }
 
     /**
@@ -75,7 +77,7 @@ public class Point implements Comparable<Point> {
      */
     public int compareTo(Point that) {
         if (this.y > that.y || (this.y == that.y && this.x > that.x)) return 1;
-        else if (this.y < that.y || (this.y == that.y && this.x < that.x)) return -1;
+        else if (this.y < that.y || this.x < that.x) return -1;
         return 0;
     }
 
@@ -115,14 +117,13 @@ public class Point implements Comparable<Point> {
         while (!StdIn.isEmpty()) {
             x = StdIn.readInt();
             y = StdIn.readInt();
-            if( x <0 || y < 0)
+            if (x < 0 || y < 0)
                 StdOut.println("invalid coordinate - Out of Range!!!");
             Point point = new Point(x, y);
             pointArray[arrayCounter++] = point;
             if (arrayCounter == arraySize) {
                 Point[] tempPointArray = new Point[arraySize * 2];
-                for (int i = 0; i < arraySize; i++)
-                    tempPointArray[i] = pointArray[i];
+                if (arraySize >= 0) System.arraycopy(pointArray, 0, tempPointArray, 0, arraySize);
                 pointArray = tempPointArray;
                 arraySize *= 2;
             }
@@ -130,21 +131,21 @@ public class Point implements Comparable<Point> {
         }
 
     }
-    private class SlopeCompare implements Comparator<Point> {
-        private Point point;
+    private static class SlopeCompare implements Comparator<Point> {
+        private final Point point;
         private SlopeCompare(Point point) {
             this.point = point;
         }
         @Override
-        public int compare (Point p, Point q) {
-            if (point.slopeTo(p) > point.slopeTo(q)) return 1;
-            if (point.slopeTo(p) < point.slopeTo(q)) return -1;
-            return 0;
+        public int compare(Point p, Point q) {
+            return Double.compare(point.slopeTo(p), point.slopeTo(q));
         }
 
         @Override
-        public boolean equals(Object o) {
-            return point.slopeTo((Point) o) == 0;
+        public boolean equals(Object obj) {
+            if (obj instanceof Point)
+                return point.slopeTo((Point) obj) == 0;
+            return false;
         }
     }
 }

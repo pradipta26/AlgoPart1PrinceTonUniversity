@@ -1,7 +1,7 @@
 import java.util.List;
 
 public class SuccessorWithDelete {
-    private class Node{
+    private static class Node{
         int value;
         Node left, right, parent;
         Node (int value) {
@@ -20,7 +20,7 @@ public class SuccessorWithDelete {
             else createTree(rootNode, node);
             int leftTreeHeight = getDepth(rootNode.left);
             int rightTreeHeight = getDepth(rootNode.right);
-            System.out.println(String.format("Current leftTreeHeight = %d rightTreeHeight = %d", leftTreeHeight, rightTreeHeight));
+            System.out.printf("Current leftTreeHeight = %d rightTreeHeight = %d%n", leftTreeHeight, rightTreeHeight);
             if (leftTreeHeight - rightTreeHeight >1)
                 balanceRight();
             else if (rightTreeHeight - leftTreeHeight >1)
@@ -36,7 +36,7 @@ public class SuccessorWithDelete {
                 parentNode.right = node;
                 node.parent = parentNode;
             }
-            else if (parentNode.right == null  && parentNode.left == null) {
+            else if (parentNode.right == null) {
                 int tempValue = parentNode.value;
                 parentNode.value = node.value;
                 node.value = tempValue;
@@ -53,7 +53,7 @@ public class SuccessorWithDelete {
                 parentNode.left = node;
                 node.parent = parentNode;
             }
-            else if (parentNode.left == null  && parentNode.right == null) {
+            else if (parentNode.left == null) {
                 int tempValue = parentNode.value;
                 parentNode.value = node.value;
                 node.value = tempValue;
@@ -140,7 +140,7 @@ public class SuccessorWithDelete {
             return findNode(parentNode.right, p);
         else if (null != parentNode && parentNode.value > p)
             return findNode( parentNode.left, p);
-        else if (null != parentNode && parentNode.value == p)
+        else if (null != parentNode)
              return parentNode;
         else return new Node(-1);
     }

@@ -1,5 +1,5 @@
 public class Stack {
-    private class Node {
+    private static class Node {
         int value;
         Node nextNode = null;
         Node(int value) {
